@@ -1,0 +1,217 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Poppins:wght@400;500;600;700&display=swap");
+:root {
+  --green: #0f7b63;
+  --dark-green: #064737;
+  --light-green: #e8f5f0;
+  --dark: #1f2933;
+  --muted: #6b7280;
+  --border: #d9e2ec;
+  --background: #f4f7f6;
+  --white: #ffffff;
+}
+
+body {
+  background: linear-gradient(180deg, #c5b4e8 0%, #d6caeb 45%, #ffffff 100%);
+  color: var(--text);
+  font-family: "Poppins", Arial, Helvetica, sans-serif;
+  font-size: 16px;
+}
+
+a {
+  color: var(--green);
+}
+
+a:hover {
+  color: var(--dark-green);
+}
+
+.navbar-brand {
+  color: var(--dark-green);
+}
+
+.min-vh-75 {
+  min-height: 75vh;
+}
+
+main {
+  background: transparent;
+}
+
+.feature-card,
+.role-card,
+.info-card {
+  background: rgba(210, 173, 173, 0.92);
+}
+
+section {
+  position: relative;
+}
+
+.main-soft-section {
+  background-color: #c5b4e8;
+  border-radius: 18px;
+  padding: 32px;
+}
+
+.info-card,
+.feature-card,
+.role-card {
+background-color: rgba(172, 205, 189, 0.88);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  height: 100%;
+  box-shadow: 0 8px 20px rgba(15, 123, 99, 0.08);
+}
+
+.info-card {
+  border-top: 5px solid var(--green);
+}
+
+.feature-card h3,
+.role-card h3 {
+  color: var(--dark-green);
+}
+
+.feature-card p,
+.role-card p {
+  color: var(--muted);
+}
+
+.feature-card a {
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.feature-card a:hover {
+  text-decoration: underline;
+}
+
+footer {
+  font-size: 14px;
+}
+
+/* Forms */
+.form-card {
+background-color: rgba(211, 235, 223, 0.88);  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px;
+  box-shadow: 0 8px 20px rgba(15, 123, 99, 0.08);
+}
+
+/* Tables */
+.table-card {
+background-color: rgba(172, 205, 189, 0.88);  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 8px 20px rgba(15, 123, 99, 0.08);
+}
+
+/* Page header */
+.page-header {
+background-color: rgba(249, 234, 250, 0.88);  border-bottom: 1px solid var(--border);
+  padding: 40px 0;
+}
+
+/* Statistic cards */
+.stat-card {
+background-color: rgba(172, 205, 189, 0.88);  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  height: 100%;
+}
+
+.stat-number {
+  color: var(--green);
+  font-size: 42px;
+  font-weight: 700;
+}
+
+/* Simple chart bars */
+.chart-row {
+  margin-bottom: 18px;
+}
+
+.chart-label {
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.chart-bar-bg {
+  background-color: #e8f1ee;
+  border-radius: 20px;
+  height: 20px;
+  overflow: hidden;
+}
+
+.chart-bar-fill {
+  background-color: var(--green);
+  height: 100%;
+  border-radius: 20px;
+}
+
+/* External source cards */
+.news-card {
+background-color: rgba(172, 205, 189, 0.88);  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  height: 100%;
+}
+
+.news-card .source {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .hero-section {
+    text-align: center;
+  }
+
+  .display-4 {
+    font-size: 2.3rem;
+  }
+
+  .info-card,
+  .feature-card,
+  .role-card,
+  .form-card,
+  .table-card,
+  .news-card,
+  .stat-card {
+    padding: 20px;
+  }
+}
+
+.match-image {
+  width: 75%;
+  height: 230px;
+  object-fit: contain;
+  border-radius: 12px;
+  margin-bottom: 18px;
+}
+
+.news-image {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  border-radius: 14px;
+  margin-bottom: 18px;
+}
+h1,
+h2,
+h3,
+.navbar-brand {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  letter-spacing: 0;
+}
+
+h1 {
+  font-weight: 700;
+}
+
+.navbar-brand {
+  font-size: 1.7rem;
+}
