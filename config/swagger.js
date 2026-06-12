@@ -16,16 +16,15 @@ const options = {
         bearerFormat: "JWT"
       }
     }
-  }
-}
-    ,servers: [
+  },
+    servers: [
       {
         url: "http://localhost:3000"
       }
     ]
-  }
+  },
   apis: ["./routes/*.js"]
-
+};
 
 const swaggerSpec = swaggerJsdoc(options);
 
