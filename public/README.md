@@ -1,177 +1,265 @@
-# Rybakina Career Tracker
+# 🎾 Rybakina Career Tracker
 
-## Опис на апликацијата
+## Overview
 
-Rybakina Career Tracker е веб апликација за следење на кариерата на тенисерката Elena Rybakina.
+Rybakina Career Tracker is a full-stack web application developed for tracking the professional tennis career of **Elena Rybakina**. The application allows users to browse match results, statistics, rankings, and career highlights, while administrators can manage match information through a protected administration panel.
 
-Апликацијата овозможува преглед на важни мечеви, турнири, титули, Grand Slam резултати, статистики, коментари од корисници и интеграција со надворешен tennis news/ranking извор.
+The project is built using:
 
-Овој дел од проектот претставува статички HTML прототип. Податоците се фиксни и не се менуваат динамички. Во следните делови апликацијата ќе се поврзе со Express backend, MongoDB база, REST API и React frontend.
+* **Frontend:** React + Vite + Bootstrap
+* **Backend:** Node.js + Express
+* **Database:** MongoDB
+* **Authentication:** JWT (JSON Web Token)
 
-## Дел 1 - Статички HTML маски
+---
 
-Во овој дел се креирани HTML страници за главните екрани на апликацијата.
+## Features
 
-### 1. index.html
+### Guest Users
 
-Почетна страница на апликацијата.
+* View Elena Rybakina's career information
+* Browse matches and tournaments
+* View match details
+* Read news and ranking information
+* View statistics and charts
 
-Функционалности:
-- краток опис на апликацијата;
-- навигација кон другите страници;
-- преглед на главните функционалности;
-- објаснување на корисничките улоги.
+### Registered Users
 
-### 2. login.html
+* Create an account
+* Log in and log out
+* Access personalized features
 
-Страница за најава на корисник.
+### Administrators
 
-Функционалности:
-- внесување е-пошта;
-- внесување лозинка;
-- линк кон регистрација;
-- подготовка за JWT автентикација во следните делови.
+* Add new matches
+* Edit existing matches
+* Delete matches
+* Manage match information
 
-### 3. register.html
+---
 
-Страница за регистрација на нов корисник.
+## Technologies Used
 
-Функционалности:
-- внесување име и презиме;
-- внесување е-пошта;
-- внесување корисничко име;
-- внесување лозинка;
-- избор на тип на корисник;
-- подготовка за bcrypt и email известување во следните делови.
+### Frontend
 
-### 4. matches.html
+* React
+* React Router DOM
+* Axios
+* Bootstrap 5
+* Chart.js
+* React ChartJS 2
+* Vite
 
-Страница за листа на елементи.
+### Backend
 
-Функционалности:
-- приказ на листа на мечеви;
-- приказ на турнир, година, противник, резултат и тип;
-- филтрирање според категорија и година;
-- линк кон детален приказ;
-- линк за додавање друг меч (достапен само при најава на админот).
+* Node.js
+* Express.js
+* MongoDB
+* Mongoose
+* JWT Authentication
+* bcryptjs
+* CORS
 
-### 5. match-details-wimbledon.html
+### Documentation
 
-Страница за детален приказ на еден меч. Иста структура имаат и страниците: match-australian-open-2026.html, match-brisbane-2024.html, match-indian-wells-2023.html.
+* Swagger UI
+* Swagger JSDoc
 
-Функционалности:
-- приказ на детални информации за избран меч;
-- приказ на коментари;
-- копче за додавање коментар преку modal popup;
-- линк кон уредување и кон бришење (достапни при најава на админот).
+---
 
-### 6. add-match.html
+## Project Structure
 
-Страница за додавање нов елемент.
+```text
+Proektna_Zadaca-main
+│
+├── client/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── services/
+│   │   └── assets/
+│
+├── controllers/
+├── middleware/
+├── models/
+├── routes/
+├── config/
+├── server.js
+└── package.json
+```
 
-Функционалности:
-- внесување турнир;
-- внесување година;
-- внесување противник;
-- внесување резултат;
-- избор на категорија;
-- избор на површина;
-- избор на фаза;
-- избор на статус;
-- внесување белешка.
+---
 
-### 7. edit-match.html
+## Database Collections
 
-Страница за прегледување и уредување елемент.
+### Users
 
-Функционалности:
-- приказ на постоечки податоци;
-- уредување турнир, година, противник, резултат, категорија, површина и статус;
-- подготовка за PUT барање кон REST API.
+Stores registered users and administrators.
 
-### 8. delete-match.html
+Fields:
 
-Страница за бришење елемент.
+* firstName
+* lastName
+* email
+* username
+* password
+* role
 
-Функционалности:
-- приказ на елементот што треба да се избрише;
-- потврда преку modal popup;
-- подготовка за DELETE барање кон REST API.
+### Matches
 
-### 9. stats.html
+Stores match information.
 
-Страница за статистика и графикони.
+Fields:
 
-Функционалности:
-- приказ на број на титули;
-- приказ на најдобар ранг;
-- приказ на Grand Slam резултати;
-- графикон за титули по години;
-- подготовка за користење chart библиотека во React делот.
+* tournament
+* opponent
+* year
+* round
+* score
+* result
+* notes
 
-### 10. external-news.html
+### Tournaments
 
-Страница за интеграција со надворешен извор.
+Stores tournament information.
 
-Функционалности:
-- пример вести;
-- пример ranking податоци;
-- линкови кон надворешни tennis извори.
+Fields:
 
-## Кориснички улоги
+* name
+* category
+* location
 
-Апликацијата поддржува три типа корисници:
+### Comments
 
-### Гостин
+Stores user comments.
 
-Гостинот може:
-- да ја гледа почетната страна;
-- да ја гледа листата на мечеви;
-- да гледа детали за меч;
-- да гледа статистика;
-- да гледа податоци од надворешен извор.
+---
 
-### Регистриран корисник
+## Installation
 
-Регистрираниот корисник може:
-- да ги користи сите функционалности на гостин;
-- да додава коментари;
-- да зачувува омилени мечеви.
+### Clone the repository
 
-### Администратор
+```bash
+git clone <repository-url>
+cd Proektna_Zadaca-main
+```
 
-Администраторот може:
-- да ги користи сите функционалности на регистриран корисник;
-- да додава нови мечеви;
-- да уредува постоечки мечеви;
-- да брише мечеви;
-- да управува со податоците во базата.
+### Backend
 
-## Надворешен извор
+Install dependencies:
 
-Апликацијата ќе користи надворешен извор за:
-- tennis news;
-- ranking информации;
-- live score информации.
+```bash
+npm install
+```
 
-Овие податоци не се примарно зачувани во MongoDB базата, туку ја збогатуваат апликацијата со актуелни информации.
+Create a `.env` file:
 
-## Користени технологии во Дел 1
+```env
+PORT=3000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_secret_key
+```
 
-- HTML5
-- CSS3
-- Bootstrap 5
-- Static pages
-- Modal popup component
+Run the backend:
 
-## Дел 2 - Express MVC архитектура и Docker
+```bash
+npm start
+```
 
-Во вториот дел апликацијата е поставена како Node.js/Express проект. Серверот ги сервира статичките HTML страници од папката `public`.
+---
 
-Апликацијата е организирана според MVC принцип:
+### Frontend
 
-- `models/` - папка за модели и шеми за база на податоци;
-- `views/` - во овој проект моментално не се користат server-side views, бидејќи страниците се статички HTML и подоцна ќе бидат заменети со React;
-- `controllers/` - содржи контролери кои ја обработуваат логиката;
-- `routes/` - содржи рути кои ги поврзуваат URL патеките со контролерите;
-- `public/` - содржи статички HTML, CSS и images фајлови.
+Navigate to the client folder:
+
+```bash
+cd client
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run the React application:
+
+```bash
+npm run dev
+```
+
+The frontend will be available at:
+
+```text
+http://localhost:5173
+```
+
+---
+
+## API Endpoints
+
+### Authentication
+
+```http
+POST /auth/register
+POST /auth/login
+```
+
+### Matches
+
+```http
+GET    /matches
+GET    /matches/:id
+POST   /matches
+PUT    /matches/:id
+DELETE /matches/:id
+```
+
+### Tournaments
+
+```http
+GET /tournaments
+```
+
+### Comments
+
+```http
+GET /comments
+POST /comments
+```
+
+---
+
+## Screens
+
+* Home
+* Matches
+* Match Details
+* Statistics
+* News
+* Login
+* Register
+* Add Match
+* Edit Match
+* Delete Match
+
+---
+
+## Future Improvements
+
+* Live WTA API integration
+* Player rankings API
+* Advanced filtering and search
+* User comments system
+* Favorite matches functionality
+* Responsive mobile improvements
+
+---
+
+## Author
+
+**Eva Ristevska**
+
+Faculty Project – Web Programming
+
+University "St. Kliment Ohridski" – Bitola
