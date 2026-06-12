@@ -6,7 +6,14 @@ ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 function Stats() {
   const data = {
     labels: ["2019", "2020", "2022", "2023", "2024", "2026"],
-    datasets: [{ label: "Titles", data: [1, 1, 1, 2, 3, 1], backgroundColor: "#138a72" }]
+    datasets: [{ label: "Titles", data: [1, 1, 1, 2, 3, 1], backgroundColor: [
+  "#138a72",
+  "#138a72",
+  "#138a72",
+  "#138a72",
+  "#138a72",
+  "#138a72",
+]}]
   };
 
   return (

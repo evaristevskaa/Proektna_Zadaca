@@ -80,10 +80,26 @@ function MatchDetails() {
   return (
     <>
       <header className="page-header">
+        <nav className="navbar navbar-expand-lg bg-white border-bottom">
+  <div className="container">
+
+
+    <div className="ms-auto">
+      <Link
+        className="btn btn-outline-success"
+        to="/matches"
+      >
+        Back to Matches
+      </Link>
+    </div>
+
+  </div>
+</nav>
         <div className="container">
           <h1 className="h2">{display.title}</h1>
           <p className="text-muted mb-0">Elena Rybakina vs {match.opponent}</p>
         </div>
+        
       </header>
       <main className="py-5">
         <div className="container">

@@ -7,6 +7,7 @@ function Matches() {
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
   const user = getCurrentUser();
+  console.log("USER:", user);
 
   useEffect(() => {
     api.get("/matches")
@@ -24,6 +25,7 @@ function Matches() {
       </header>
       <main className="py-5">
         <div className="container">
+          <h5>User role: {user?.role}</h5>
           {user?.role === "admin" && <Link to="/add-match" className="btn btn-success mb-3">Add Match</Link>}
 
           <div className="table-card mb-4">
