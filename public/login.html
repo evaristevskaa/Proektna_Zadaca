@@ -33,7 +33,7 @@
             <p class="text-muted">
 Log in to comment on matches and save your favorite results.            </p>
 
-            <form>
+            <form id="loginForm">
               <div class="mb-3">
                 <label for="email" class="form-label">E-mail</label>
                 <input
@@ -51,7 +51,7 @@ Log in to comment on matches and save your favorite results.            </p>
                   class="form-control"
                   id="password"
                   placeholder="Enter password"
-                  value="password123">
+                  value="admin12345">
               </div>
 
               <div class="d-flex justify-content-between align-items-center mb-3">
@@ -65,9 +65,9 @@ Log in to comment on matches and save your favorite results.            </p>
                 <a href="register.html">Don't have an account?</a>
               </div>
 
-              <a href="index.html" class="btn btn-success w-100">
+              <button type="submit" class="btn btn-success w-100">
                 Log in
-              </a>
+              </button>
             </form>
 
             <hr>
@@ -87,5 +87,35 @@ Log in to follow your favorite matches and participate in discussions.
     </div>
   </footer>
 
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      
+      try {
+        const response = await fetch ("http://localhost:3000/api/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({email, password})
+        });
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Login failed");
+        }
+
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+        window.location.href="matches.html";
+      } catch (error) {
+        alert(error.message);
+      }
+      });
+    
+  </script>
 </body>
 </html>

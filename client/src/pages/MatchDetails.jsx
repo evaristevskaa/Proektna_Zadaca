@@ -6,10 +6,13 @@ import { getCurrentUser } from "../services/authService";
 function MatchDetails() {
   const { id } = useParams();
   const [match, setMatch] = useState(null);
+  const [comments, setComments] = useState([]);
+  const [commentText, setCommentText] = useState("");
   const user = getCurrentUser();
 
   useEffect(() => {
     api.get(`/matches/${id}`).then((res) => setMatch(res.data));
+    api.get(`/comments/match/${id}`).then((res) => setComments(res.data));
   }, [id]);
 
   if (!match) {
@@ -77,6 +80,23 @@ function MatchDetails() {
     comments: []
   };
 
+  const addComment = async (event) => {
+    event.preventDefault();
+
+    const response = await api.post("/comments", {
+      match: id,
+      text: commentText
+    });
+
+    setComments([response.data, ...comments]);
+    setCommentText("");
+  };
+
+  const deleteComment = async (commentId) => {
+    await api.delete(`/comments/${commentId}`);
+    setComments(comments.filter((comment) => comment._id !== commentId));
+  };
+
   return (
     <>
       <header className="page-header">
@@ -118,25 +138,68 @@ function MatchDetails() {
                   <dt className="col-sm-4">Opponent</dt><dd className="col-sm-8">{match.opponent}</dd>
                   <dt className="col-sm-4">Result</dt><dd className="col-sm-8">{match.score}</dd>
                   <dt className="col-sm-4">{display.courtLabel}</dt><dd className="col-sm-8">{match.tournament?.surface}</dd>
-                  <dt className="col-sm-4">Status</dt><dd className="col-sm-8"><span className="badge text-bg-success">Win</span></dd>
+                  <dt className="col-sm-4">Status</dt><dd className="col-sm-8"><span className={match.result == "Win" ? "badge text-bg-success" : "bagde text-bg-danger"}>{match.result}</span></dd>
                 </dl>
                 <p>{display.description}</p>
                 {user?.role === "admin"
-                  ? <Link className="btn btn-warning" to={`/edit-match/${match._id}`}>Edit</Link>
-                  : <div className="alert alert-light border">Admin editing options are available only after admin login.</div>}
+                ? (
+                    <div className="d-flex gap-2">
+                      <Link className="btn btn-warning" to={`/edit-match/${match._id}`}>Edit</Link>
+                      <Link className="btn btn-danger" to={`/delete-match/${match._id}`}>Delete</Link>
+                    </div>
+                  )
+              : <div className="alert alert-light border">Admin editing options are available only after admin login.</div>}
               </div>
             </div>
             <div className="col-lg-4">
               <div className="table-card">
                 <h3 className="h5">Comments</h3>
-                {display.comments.map(([author, text]) => (
-                  <div className="border-bottom py-3" key={author}>
+               {comments.length === 0 && display.comments.map(([author, text]) => (
+                  <div className="border-bottom py-3" key={`${author}-${text}`}>
                     <strong>{author}</strong>
                     <p className="mb-0 text-muted">{text}</p>
                   </div>
                 ))}
-                <button className="btn btn-success w-100 mt-3" type="button">Add comment</button>
-              </div>
+                {comments.map((comment) => (
+                  <div className="border-bottom py-3" key={comment._id}>
+                      <div className="d-flex justify-content-between gap-2">
+                      <strong>{comment.user?.username || comment.user?.firstName || "User"}</strong>
+                      {(user?.role === "admin" || user?.id === comment.user?._id) && (
+                        <button
+                          className="btn btn-sm btn-outline-danger"
+                          type="button"
+                          onClick={() => deleteComment(comment._id)}
+                        >
+                          Delete
+                        </button>
+                      )}
+                    </div>
+                    <p className="mb-0 text-muted">{comment.text}</p>
+                  </div>
+                ))}
+
+                {user ? (
+                  <form className="mt-3" onSubmit={addComment}>
+                    <label className="form-label" htmlFor="commentText">Add comment</label>
+                    <textarea
+                      className="form-control"
+                      id="commentText"
+                      rows="3"
+                      value={commentText}
+                      onChange={(event) => setCommentText(event.target.value)}
+                      minLength="3"
+                      maxLength="500"
+                      required
+                    />
+                    <button className="btn btn-success w-100 mt-3" type="submit">Save comment</button>
+                  </form>
+                ) : (
+                  <div className="alert alert-light border mt-3 mb-0">
+                    Log in as a registered user to add comments.
+                  </div>
+                )}
+
+             </div>
             </div>
           </div>
         </div>

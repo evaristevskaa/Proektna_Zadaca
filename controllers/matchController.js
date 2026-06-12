@@ -1,4 +1,5 @@
 const Match = require("../models/Match");
+const Comment = require("../models/Comment");
 
 const getAllMatches = async (req, res) => {
   try {
@@ -57,13 +58,16 @@ const updateMatch = async (req, res) => {
 
 const deleteMatch = async (req, res) => {
   try {
-    const match = await Match.findByIdAndDelete(req.params.id);
+    const match = await Match.findById(req.params.id);
 
     if (!match) {
       return res.status(404).json({ message: "Match not found" });
     }
 
-    res.status(200).json({ message: "Match deleted successfully" });
+    await Comment.deleteMany({match: match._id});
+    await Match.findByIdAndDelete(req.params.id);
+
+    res.status(200).json({messag:"Match deleted successfully"});
   } catch (error) {
     res.status(500).json({ message: "Error deleting match", error: error.message });
   }

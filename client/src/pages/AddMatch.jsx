@@ -1,28 +1,68 @@
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import api from "../services/api";
+import { getCurrentUser } from "../services/authService";
 
 function AddMatch() {
+  const navigate = useNavigate();
+  const user = getCurrentUser();
+  const [tournaments, setTournaments] = useState([]);
+  const [playerId, setPlayerId] = useState("");
+  const [form, setForm] = useState({
+    tournament: "",
+    opponent: "",
+    year: new Date().getFullYear(),
+    round: "Final",
+    score: "",
+    result: "Win",
+    notes: ""
+  });
+
+  useEffect(() => {
+    api.get("/tournaments").then((res) => {
+      setTournaments(res.data);
+      setForm((current) => ({
+        ...current,
+        tournament: current.tournament || res.data[0]?._id || ""
+      }));
+    });
+
+    api.get("/matches").then((res) => {
+      setPlayerId(res.data[0]?.player?._id || "");
+    });
+  }, []);
+
+  if (user?.role !== "admin") {
+    return <Navigate to="/matches" replace />;
+  }
+
+  const update = (event) => {
+    setForm({ ...form, [event.target.name]: event.target.value });
+  };
+
+  const submit = async (event) => {
+    event.preventDefault();
+
+    if (!playerId) {
+      alert("Seed the database first so the Rybakina player exists.");
+      return;
+    }
+
+    await api.post("/matches", {
+      ...form,
+      player: playerId,
+      year: Number(form.year)
+    });
+
+    navigate("/matches");
+  };
+
   return (
     <>
-      <nav className="navbar navbar-expand-lg bg-white border-bottom">
-        <div className="container">
-          <Link className="navbar-brand fw-bold" to="/">
-            Rybakina Career Tracker
-          </Link>
-
-          <div className="ms-auto">
-            <Link className="btn btn-outline-success" to="/matches">
-              Back to list
-            </Link>
-          </div>
-        </div>
-      </nav>
-
       <header className="page-header">
         <div className="container">
           <h1 className="h2">Add a new match</h1>
-          <p className="text-muted mb-0">
-            Add a new significant match to your career archive.
-          </p>
+          <p className="text-muted mb-0">Add a new significant match to your career archive.</p>
         </div>
       </header>
 
@@ -30,159 +70,74 @@ function AddMatch() {
         <div className="container">
           <div className="row justify-content-center">
             <div className="col-lg-8">
-
-              <div className="form-card">
-                <form>
-
-                  <div className="row">
-                    <div className="col-md-6 mb-3">
-                      <label htmlFor="tournament" className="form-label">
-                        Tournament
-                      </label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="tournament"
-                        defaultValue="Australian Open"
-                        placeholder="Enter tournament name"
-                      />
-                    </div>
-
-                    <div className="col-md-6 mb-3">
-                      <label htmlFor="year" className="form-label">
-                        Year
-                      </label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        id="year"
-                        defaultValue="2026"
-                        placeholder="2026"
-                      />
-                    </div>
+              <form className="form-card" onSubmit={submit}>
+                <div className="row">
+                  <div className="col-md-6 mb-3">
+                    <label htmlFor="tournament" className="form-label">Tournament</label>
+                    <select className="form-select" id="tournament" name="tournament" value={form.tournament} onChange={update} required>
+                      {tournaments.map((tournament) => (
+                        <option key={tournament._id} value={tournament._id}>{tournament.name}</option>
+                      ))}
+                    </select>
                   </div>
 
-                  <div className="row">
-                    <div className="col-md-6 mb-3">
-                      <label htmlFor="opponent" className="form-label">
-                        Opponent
-                      </label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="opponent"
-                        defaultValue="Aryna Sabalenka"
-                        placeholder="Opponent name"
-                      />
-                    </div>
+                  <div className="col-md-6 mb-3">
+                    <label htmlFor="year" className="form-label">Year</label>
+                    <input type="number" className="form-control" id="year" name="year" value={form.year} onChange={update} min="1990" max="2100" required />
+                  </div>
+                </div>
 
-                    <div className="col-md-6 mb-3">
-                      <label htmlFor="score" className="form-label">
-                        Result
-                      </label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="score"
-                        defaultValue="6-4, 4-6, 6-4"
-                        placeholder="6-4, 4-6, 6-4"
-                      />
-                    </div>
+                <div className="row">
+                  <div className="col-md-6 mb-3">
+                    <label htmlFor="opponent" className="form-label">Opponent</label>
+                    <input className="form-control" id="opponent" name="opponent" value={form.opponent} onChange={update} required />
                   </div>
 
-                  <div className="row">
-                    <div className="col-md-6 mb-3">
-                      <label htmlFor="category" className="form-label">
-                        Category
-                      </label>
-                      <select className="form-select" id="category" defaultValue="Grand Slam">
-                        <option>Grand Slam</option>
-                        <option>WTA 1000</option>
-                        <option>WTA 500</option>
-                        <option>WTA 250</option>
-                        <option>WTA Finals</option>
-                      </select>
-                    </div>
+                  <div className="col-md-6 mb-3">
+                    <label htmlFor="score" className="form-label">Result</label>
+                    <input className="form-control" id="score" name="score" value={form.score} onChange={update} placeholder="6-4, 4-6, 6-4" required />
+                  </div>
+                </div>
 
-                    <div className="col-md-6 mb-3">
-                      <label htmlFor="surface" className="form-label">
-                        Court
-                      </label>
-                      <select className="form-select" id="surface" defaultValue="Hard">
-                        <option>Hard</option>
-                        <option>Grass</option>
-                        <option>Clay</option>
-                      </select>
-                    </div>
+                <div className="row">
+                  <div className="col-md-6 mb-3">
+                    <label htmlFor="round" className="form-label">Phase</label>
+                    <select className="form-select" id="round" name="round" value={form.round} onChange={update}>
+                      <option>Final</option>
+                      <option>Semi-final</option>
+                      <option>Quarter-final</option>
+                      <option>Round of 16</option>
+                      <option>Group stage</option>
+                    </select>
                   </div>
 
-                  <div className="row">
-                    <div className="col-md-6 mb-3">
-                      <label htmlFor="round" className="form-label">
-                        Phase
-                      </label>
-                      <select className="form-select" id="round" defaultValue="Final">
-                        <option>Final</option>
-                        <option>Semi-final</option>
-                        <option>Quarter-final</option>
-                        <option>Round of 16</option>
-                        <option>Group stage</option>
-                      </select>
-                    </div>
-
-                    <div className="col-md-6 mb-3">
-                      <label htmlFor="result" className="form-label">
-                        Status
-                      </label>
-                      <select className="form-select" id="result" defaultValue="Win">
-                        <option>Win</option>
-                        <option>Defeat</option>
-                      </select>
-                    </div>
+                  <div className="col-md-6 mb-3">
+                    <label htmlFor="result" className="form-label">Status</label>
+                    <select className="form-select" id="result" name="result" value={form.result} onChange={update}>
+                      <option>Win</option>
+                      <option>Loss</option>
+                    </select>
                   </div>
+                </div>
 
-                  <div className="mb-3">
-                    <label htmlFor="notes" className="form-label">
-                      Note
-                    </label>
-                    <textarea
-                      className="form-control"
-                      id="notes"
-                      rows="4"
-                      defaultValue="A brief description of the meaning of the match..."
-                    />
-                  </div>
+                <div className="mb-3">
+                  <label htmlFor="notes" className="form-label">Note</label>
+                  <textarea className="form-control" id="notes" name="notes" rows="4" value={form.notes} onChange={update} />
+                </div>
 
-                  <div className="d-flex gap-2 mt-4">
-                    <button type="submit" className="btn btn-success">
-                      Save
-                    </button>
-
-                    <Link
-                      to="/matches"
-                      className="btn btn-outline-secondary"
-                    >
-                      Cancel
-                    </Link>
-                  </div>
-
-                </form>
-
-                <hr />
-              </div>
-
+                <div className="d-flex gap-2 mt-4">
+                  <button type="submit" className="btn btn-success">Save</button>
+                  <Link to="/matches" className="btn btn-outline-secondary">Cancel</Link>
+                </div>
+              </form>
             </div>
           </div>
         </div>
       </main>
 
-      <footer className="bg-white border-top py-4">
-        <div className="container text-center text-muted">
-          <p className="mb-0">
-            Rybakina Career Tracker - Add match screen
-          </p>
-        </div>
-      </footer>
+
+
+
     </>
   );
 }

@@ -7,7 +7,6 @@ function Matches() {
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
   const user = getCurrentUser();
-  console.log("USER:", user);
 
   useEffect(() => {
     api.get("/matches")
@@ -25,7 +24,7 @@ function Matches() {
       </header>
       <main className="py-5">
         <div className="container">
-          <h5>User role: {user?.role}</h5>
+          <h5>User role: {user?.role || "quest"}</h5>
           {user?.role === "admin" && <Link to="/add-match" className="btn btn-success mb-3">Add Match</Link>}
 
           <div className="table-card mb-4">
@@ -63,7 +62,7 @@ function Matches() {
             {loading ? <p>Loading...</p> : (
               <table className="table align-middle">
                 <thead>
-                  <tr><th>Year</th><th>Tournament</th><th>Opponent</th><th>Result</th><th>Type</th><th>View</th></tr>
+                  <tr><th>Year</th><th>Tournament</th><th>Opponent</th><th>Result</th><th>Type</th><th>Actions</th></tr>
                 </thead>
                 <tbody>
                   {matches.map((match) => (
@@ -73,8 +72,18 @@ function Matches() {
                       <td>{match.opponent}</td>
                       <td>{match.score}</td>
                       <td><span className="badge text-bg-success">{match.tournament?.category}</span></td>
-                      <td><Link className="btn btn-sm btn-outline-success" to={`/matches/${match._id}`}>Details</Link></td>
-                    </tr>
+                    <td>
+                        <div className="d-flex gap-2 flex-wrap">
+                          <Link className="btn btn-sm btn-outline-success" to={`/matches/${match._id}`}>Details</Link>
+                          {user?.role === "admin" && (
+                            <>
+                              <Link className="btn btn-sm btn-outline-warning" to={`/edit-match/${match._id}`}>Edit</Link>
+                              <Link className="btn btn-sm btn-outline-danger" to={`/delete-match/${match._id}`}>Delete</Link>
+                            </>
+                          )}
+                        </div>
+                      </td>                   
+                       </tr>
                   ))}
                 </tbody>
               </table>

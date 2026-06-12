@@ -37,6 +37,7 @@ app.use("/api/matches", matchRoutes);
 app.use("/api/tournaments", tournamentRoutes);
 app.use("/api/comments", commentRoutes);
 app.use("/db", dbRoutes);
+app.use("/api/db", dbRoutes);
 app.use("/api/auth", authRoutes);
 
 app.listen(port, () => {

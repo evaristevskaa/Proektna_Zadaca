@@ -34,7 +34,7 @@
           Create a user profile so you can comment and follow your favorite matches.        
           </p>
 
-            <form>
+            <form id="registerForm">
               <div class="row">
                 <div class="col-md-6 mb-3">
                   <label for="firstName" class="form-label">First name</label>
@@ -43,7 +43,7 @@
                     class="form-control"
                     id="firstName"
                     placeholder="First name"
-                    value="">
+                    required>
                 </div>
 
                 <div class="col-md-6 mb-3">
@@ -53,7 +53,7 @@
                     class="form-control"
                     id="lastName"
                     placeholder="Last name"
-                    value="">
+                    required>
                 </div>
               </div>
 
@@ -64,7 +64,7 @@
                   class="form-control"
                   id="email"
                   placeholder="example@email.com"
-                  value="">
+                  required>
               </div>
 
               <div class="mb-3">
@@ -74,7 +74,7 @@
                   class="form-control"
                   id="username"
                   placeholder="ana123"
-                  value="">
+                  required>
               </div>
 
               <div class="mb-3">
@@ -84,7 +84,8 @@
                   class="form-control"
                   id="password"
                   placeholder="At least 8 characters"
-                  value="">
+                  minlength="8"
+                  required>
               </div>
 
               <div class="mb-3">
@@ -102,9 +103,9 @@
                 </label>
               </div>
 
-              <a href="login.html" class="btn btn-success w-100">
+              <button type="submit" class="btn btn-success w-100">
                 Sign up
-              </a>
+              </button>
             </form>
 
             <hr>
@@ -119,5 +120,47 @@
     </div>
   </main>
 
-  <footer class="bg-white border-top py-4">
-    <div class="container text
+ <footer class="bg-white border-top py-4"> 
+  <div class="container text-center text-muted">
+    <p class="mb-0">Rybakina Career Tracker - Register screen </p>
+  </div>
+  </footer>
+
+  <script>
+    document.getElementById("registerForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const payload = {
+        firstName: document.getElementById("firstName").value,
+        lastName: document.getElementById("lastName").value,
+        email: document.getElementById("email").value,
+        username: document.getElementById("username").value,
+        password: document.getElementById("password").value,
+        role: document.getElementById("role").value === "Administrator" ? "admin" : "user"
+      };
+
+      try {
+        const response = await fetch("http://localhost:3000/api/auth/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Register failed");
+        }
+
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+        window.location.href = "matches.html";
+      } catch (error) {
+        alert(error.message);
+      }
+    });
+  </script>
+</body>
+</html>

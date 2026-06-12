@@ -32,7 +32,11 @@ const getCommentsByMatch = async (req, res) => {
 
 const createComment = async (req, res) => {
   try {
-    const comment = await Comment.create(req.body);
+    const comment = await Comment.create({
+      match: req.body.match,
+      text: req.body.text,
+      user: req.user._id
+    });
 
     const populatedComment = await Comment.findById(comment._id)
       .populate("user", "firstName lastName username")
@@ -46,14 +50,23 @@ const createComment = async (req, res) => {
 
 const updateComment = async (req, res) => {
   try {
-    const comment = await Comment.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true
-    });
+    const existingComment = await Comment.findById(req.params.id);
 
-    if (!comment) {
+    if (!existingComment) {
       return res.status(404).json({ message: "Comment not found" });
     }
+
+    if (existingComment.user.toString() !== req.user._id.toString() && req.user.role !== "admin") {
+      return res.status(403).json({ message: "You can edit only your own comments" });
+    }
+
+    const comment = await Comment.findByIdAndUpdate(req.params.id, {
+      text: req.body.text,
+      status: req.body.status
+    }, {
+      new: true,
+      runValidators: true
+    }).populate("user", "firstName lastName username");
 
     res.status(200).json(comment);
   } catch (error) {
@@ -63,12 +76,18 @@ const updateComment = async (req, res) => {
 
 const deleteComment = async (req, res) => {
   try {
-    const comment = await Comment.findByIdAndDelete(req.params.id);
+    const comment = await Comment.findById(req.params.id);
 
     if (!comment) {
       return res.status(404).json({ message: "Comment not found" });
     }
 
+    if (comment.user.toString() !== req.user._id.toString() && req.user.role !== "admin") {
+      return res.status(403).json({ message: "You can delete only your own comments" });
+    }
+
+    await Comment.findByIdAndDelete(req.params.id);
+    
     res.status(200).json({ message: "Comment deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: "Error deleting comment", error: error.message });
