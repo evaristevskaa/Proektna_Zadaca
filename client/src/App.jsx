@@ -10,6 +10,7 @@ import Matches from "./pages/Matches.jsx";
 import MatchDetails from "./pages/MatchDetails.jsx";
 import AddMatch from "./pages/AddMatch.jsx";
 import EditMatch from "./pages/EditMatch.jsx";
+import DeleteMatch from "./pages/DeleteMatch.jsx";
 import Stats from "./pages/Stats.jsx";
 import ExternalNews from "./pages/ExternalNews.jsx";
 
@@ -26,6 +27,7 @@ function App() {
         <Route path="/matches/:id" element={<MatchDetails />} />
         <Route path="/add-match" element={<AddMatch />} />
         <Route path="/edit-match/:id" element={<EditMatch />} />
+        <Route path="/delete-match/:id" element={<DeleteMatch />} />
         <Route path="/stats" element={<Stats />} />
         <Route path="/external-news" element={<ExternalNews />} />
       </Routes>

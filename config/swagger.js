@@ -8,14 +8,24 @@ const options = {
       version: "1.0.0",
       description: "REST API documentation for Rybakina Career Tracker"
     },
-    servers: [
+     components: {
+    securitySchemes: {
+      bearerAuth: {
+        type: "http",
+        scheme: "bearer",
+        bearerFormat: "JWT"
+      }
+    }
+  }
+}
+    ,servers: [
       {
         url: "http://localhost:3000"
       }
     ]
-  },
+  }
   apis: ["./routes/*.js"]
-};
+
 
 const swaggerSpec = swaggerJsdoc(options);
 

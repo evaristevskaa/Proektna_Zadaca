@@ -1,3 +1,23 @@
+/**
+ * @swagger
+ * /api/db/seed:
+ *   post:
+ *     summary: Insert initial data
+ *     tags: [Database]
+ *     responses:
+ *       200:
+ *         description: Database seeded
+ */
+/**
+ * @swagger
+ * /api/db/reset:
+ *   delete:
+ *     summary: Delete all database data
+ *     tags: [Database]
+ *     responses:
+ *       200:
+ *         description: Database cleared
+ */
 const express = require("express");
 const router = express.Router();
 
