@@ -244,6 +244,41 @@ POST /comments
 * Delete Match
 
 ---
+## Running the Application with Docker
+
+### Prerequisites
+
+* Docker Desktop installed
+* Docker Compose installed
+
+### Start the application
+
+```bash
+docker-compose up --build
+```
+
+### Stop the application
+
+```bash
+docker-compose down
+```
+
+### Available services
+
+Frontend:
+http://localhost:5173
+
+Backend API:
+http://localhost:3000
+
+Swagger Documentation:
+http://localhost:3000/api-docs
+
+MongoDB:
+mongodb://localhost:27017
+
+```
+```
 
 ## Future Improvements
 
